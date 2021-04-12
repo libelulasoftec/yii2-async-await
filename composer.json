@@ -1,0 +1,26 @@
+{
+  "name": "taguz91/yii2-async-await",
+  "description": "About Async await for php yii2 integration, this uses amphp",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2",
+    "extension",
+    "async",
+    "await"
+  ],
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Johnny Garcia",
+      "email": "johnnygar98@hotmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "~2.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "taguz91\\AsyncAwait\\": "src"
+    }
+  }
+}
