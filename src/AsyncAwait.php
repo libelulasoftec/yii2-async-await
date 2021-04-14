@@ -8,6 +8,17 @@ use Amp\Promise;
 use Opis\Closure\SerializableClosure;
 use yii\base\Component;
 
+/**
+ * Support for async await, using amphp. To use it, just config in your application components. 
+ * 
+ * Usage example: 
+ * ```
+ * Yii::$app->asyncAwait->add('sendUserMessage', function (string $message, string $number) {
+ *   if ($number === '') return 'Number is required.';
+ *   return \common\models\Phone::sendMessage($message, $number);
+ * }, $message, $number);
+ * ```
+ */
 class AsyncAwait extends Component
 {
 
