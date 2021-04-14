@@ -24,6 +24,8 @@ class AsyncAwait extends Component
    * Add a promise
    * 
    * @param string $key - Unique identifiquer for a function
+   * @param Closure $closure - Your clouse with args 
+   * @param ...$args - All params for you closure
    * @throws PromiseExistException - When the key exist
    */
   public function add(
