@@ -5,6 +5,7 @@ namespace taguz91\AsyncAwait;
 use Closure;
 use Amp\Parallel\Worker;
 use Amp\Promise;
+use InvalidArgumentException;
 use Opis\Closure\SerializableClosure;
 use yii\base\Component;
 
@@ -24,11 +25,14 @@ class AsyncAwait extends Component
 
   private $promises = [];
 
-  public $loader = '';
-
-  public function __construct()
-  {
-    Worker\factory(new Worker\BootstrapWorkerFactory(__DIR__ . '/config/async.php'));
+  public $loader;
+  
+  public function init() {
+    if (empty($this->loader)) {
+      throw new InvalidArgumentException('Required loader');
+    }
+    Worker\factory(new Worker\BootstrapWorkerFactory($this->loader));
+    parent::init();
   }
 
   /**

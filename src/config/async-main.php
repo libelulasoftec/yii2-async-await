@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * This is a example configuration for your app 
+ */
+
 return [
   'id' => 'app-async',
   'basePath' => dirname(__DIR__),
