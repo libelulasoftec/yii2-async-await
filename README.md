@@ -29,34 +29,35 @@ Once the extension is installed, simply use it in your code by:
 
 Need to configure the bootstrap configuration app, because the async run in another context.
 
+The following examples was tested in advanced template.
+
 For example: 
 ```php
 return [
-  'id' => 'app-async',
-  'basePath' => dirname(__DIR__),
-//   Your controllers, you can change this to backend\controllers
-  'controllerNamespace' => 'frontend\controllers',
-  'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
-  'aliases' => [
-    '@bower' => '@vendor/bower-asset',
-    '@npm'   => '@vendor/npm-asset',
-  ],
-//   Required components for async functions 
-// DB conections 
-  'components' => [
-    'cache' => [
-      'class' => 'yii\caching\FileCache',
+    'id' => 'app-async',
+    'basePath' => dirname(__DIR__),
+    // Your controllers, you can change this to backend\controllers
+    'controllerNamespace' => 'frontend\controllers',
+    'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
+    'aliases' => [
+        '@bower' => '@vendor/bower-asset',
+        '@npm'   => '@vendor/npm-asset',
     ],
-    // Config your database 
-    'db' => [
-      'class' => 'yii\db\Connection',
-      'dsn' => 'mysql:host=localhost;dbname=yii2advanced',
-      'username' => 'root',
-      'password' => '',
-      'charset' => 'utf8',
+    // Required components for async functions 
+    'components' => [
+        'cache' => [
+            'class' => 'yii\caching\FileCache',
+        ],
+        // Config your database 
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=yii2advanced',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+        ],
     ],
-  ],
-  'params' => [],
+    'params' => [],
 ];
 ```
 
@@ -64,16 +65,13 @@ Also need to create the entry script, for autoload the dependecies and start Yii
 
 For example: 
 ```php
-
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 // Autoload for composer an yii2 
 require __DIR__ . '/../../vendor/autoload.php';
-require __DIR__ . '/../../vendor/yiisoft/yii2/Yii.php';\
+require __DIR__ . '/../../vendor/yiisoft/yii2/Yii.php';
+require __DIR__ . '/../../common/config/bootstrap.php';
 
-// Alias this required for auto urls
-Yii::setAlias('@common', dirname(__DIR__));
-Yii::setAlias('@frontend', dirname(dirname(__DIR__)) . '/frontend');
 
 // Your custom configuration for async 
 $config = require __DIR__ . '/async-main.php';
@@ -88,8 +86,15 @@ Adding to web app, in components section you need to add this configuration:
 [
     ...,
     'components' => [
+        // If you want to use callbacks 
         'asyncAwait' => [
             'class' => \taguz91\AsyncAwait\AsyncAwait::class,
+            // Your own entry script, see the above examples
+            'loader' => __DIR__ . '/async.php'
+        ],
+        // If you want to use classes, this is more faster 
+        'asyncTask' => [
+            'class' => \taguz91\AsyncAwait\AsyncTask::class,
             // Your own entry script, see the above examples
             'loader' => __DIR__ . '/async.php'
         ],
@@ -97,7 +102,7 @@ Adding to web app, in components section you need to add this configuration:
 ]
 ```
 
-Code example: 
+Code example for callbacks usage:
 
 ```php 
 
@@ -120,4 +125,43 @@ $responses = Yii::$app->asyncAwait->run();
 // Getting especific response
 $emailResponse = $responses['sendUserEmail'];
 
+```
+
+Code example for Tasks:
+
+```php
+// This class is autoloadable 
+namespace common\tasks;
+
+use Amp\Parallel\Worker\Environment;
+use Amp\Parallel\Worker\Task;
+use yii\helpers\VarDumper;
+
+class PrintTask implements Task
+{
+    private $text;
+
+    public function __construct(string $text)
+    {
+        $this->text = $text;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function run(Environment $environment)
+    {
+        return [
+            'response' => "FUTURE PROMISE WORKER {$this->text}",
+            'enviroment' => VarDumper::dumpAsString($environment),
+        ];
+    }
+}
+
+
+/** @var \taguz91\AsyncAwait\AsyncTask */
+$async = Yii::$app->asyncTask;
+
+$async->add('1', new PrintTask('THIS IS MY LARGE TEXT'));
+$response = $async->run();
 ```
