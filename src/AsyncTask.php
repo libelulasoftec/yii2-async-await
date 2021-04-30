@@ -6,6 +6,7 @@ use Amp\Loop;
 use Amp\Parallel\Worker\DefaultPool;
 use Amp\Parallel\Worker\Task;
 use Yii;
+use yii\base\InvalidConfigException;
 
 /**
  * Support for async tasks, using amphp. To use it, just config in your application components. 
@@ -17,6 +18,14 @@ use Yii;
 class AsyncTask extends BaseAsync
 {
     public $maxPoolSize = DefaultPool::DEFAULT_MAX_SIZE;
+
+    public function init()
+    {
+        parent::init();
+        if (!is_int($this->maxPoolSize) || $this->maxPoolSize > 64) {
+            throw new InvalidConfigException('The {maxPoolSize} need to be int and less that 64');
+        }
+    }
 
     /**
      * Add a promise

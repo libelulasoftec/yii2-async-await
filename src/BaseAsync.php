@@ -2,9 +2,9 @@
 
 namespace taguz91\AsyncAwait;
 
-use InvalidArgumentException;
 use yii\base\Component;
 use Amp\Parallel\Worker;
+use yii\base\InvalidConfigException;
 
 class BaseAsync extends Component implements AsyncInterface
 {
@@ -15,11 +15,11 @@ class BaseAsync extends Component implements AsyncInterface
 
     public function init()
     {
+        parent::init();
         if (empty($this->loader)) {
-            throw new InvalidArgumentException('Required loader');
+            throw new InvalidConfigException('Required loader');
         }
         Worker\factory(new Worker\BootstrapWorkerFactory($this->loader));
-        parent::init();
     }
 
     /**
