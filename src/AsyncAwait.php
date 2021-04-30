@@ -5,9 +5,7 @@ namespace taguz91\AsyncAwait;
 use Closure;
 use Amp\Parallel\Worker;
 use Amp\Promise;
-use InvalidArgumentException;
 use Opis\Closure\SerializableClosure;
-use yii\base\Component;
 
 /**
  * Support for async await, using amphp. To use it, just config in your application components. 
@@ -20,21 +18,8 @@ use yii\base\Component;
  * }, $message, $number);
  * ```
  */
-class AsyncAwait extends Component
+class AsyncAwait extends BaseAsync
 {
-
-  private $promises = [];
-
-  public $loader;
-  
-  public function init() {
-    if (empty($this->loader)) {
-      throw new InvalidArgumentException('Required loader');
-    }
-    Worker\factory(new Worker\BootstrapWorkerFactory($this->loader));
-    parent::init();
-  }
-
   /**
    * Add a promise
    * 
@@ -55,13 +40,6 @@ class AsyncAwait extends Component
     return $this;
   }
 
-  /**
-   * Delete a function in your actually promises
-   */
-  public function remove(string $key)
-  {
-    unset($this->promises[$key]);
-  }
 
   /**
    * Execute all promises and return the functions results 
@@ -72,13 +50,5 @@ class AsyncAwait extends Component
     $res = Promise\wait(Promise\all($this->promises));
     $this->flush();
     return $res;
-  }
-
-  /**
-   * Reset all promises
-   */
-  public function flush()
-  {
-    $this->promises = [];
   }
 }
