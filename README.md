@@ -1,6 +1,6 @@
 Async await
 ===========
-About Async await for php yii2 integration, this uses amphp
+Async await for php yii2 integration, this uses amphp and support callbacks and Task 
 
 Installation
 ------------
