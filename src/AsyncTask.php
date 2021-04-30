@@ -17,6 +17,8 @@ use yii\base\InvalidConfigException;
  */
 class AsyncTask extends BaseAsync
 {
+    const PROFILING = 'RunTask';
+
     public $maxPoolSize = DefaultPool::DEFAULT_MAX_SIZE;
 
     public function init()
@@ -42,6 +44,7 @@ class AsyncTask extends BaseAsync
             throw new TaskExistException('Task ' . $key . '  exist, change the {$key}');
         }
         $this->promises[$key] = $task;
+        Yii::debug("Add a new task {$key}", self::class);
         return $this;
     }
 
@@ -52,11 +55,11 @@ class AsyncTask extends BaseAsync
     public function run(): array
     {
         $results = [];
-        $tasks = $this->tasks;
+        $tasks = $this->promises;
 
         if (empty($tasks)) return [];
 
-        Yii::beginProfile('Runtask', self::class);
+        Yii::beginProfile(self::PROFILING, self::class);
 
         $maxPoolSize = $this->maxPoolSize;
 
@@ -76,9 +79,7 @@ class AsyncTask extends BaseAsync
             return yield $pool->shutdown();
         });
 
-        $this->tasks = [];
-
-        Yii::endProfile('Runtask', self::class);
+        Yii::endProfile(self::PROFILING, self::class);
 
         $this->flush();
         return $results;

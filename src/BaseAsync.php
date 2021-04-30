@@ -4,6 +4,7 @@ namespace taguz91\AsyncAwait;
 
 use yii\base\Component;
 use Amp\Parallel\Worker;
+use Yii;
 use yii\base\InvalidConfigException;
 
 class BaseAsync extends Component implements AsyncInterface
@@ -27,6 +28,7 @@ class BaseAsync extends Component implements AsyncInterface
      */
     public function remove(string $key)
     {
+        Yii::debug("Removing {$key} from promises", static::class);
         unset($this->promises[$key]);
     }
 
@@ -43,6 +45,7 @@ class BaseAsync extends Component implements AsyncInterface
      */
     public function flush()
     {
+        Yii::debug('Reset the promises', static::class);
         $this->promises = [];
     }
 }

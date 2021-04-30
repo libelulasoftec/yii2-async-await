@@ -6,6 +6,7 @@ use Closure;
 use Amp\Parallel\Worker;
 use Amp\Promise;
 use Opis\Closure\SerializableClosure;
+use Yii;
 
 /**
  * Support for async await, using amphp. To use it, just config in your application components. 
@@ -20,6 +21,9 @@ use Opis\Closure\SerializableClosure;
  */
 class AsyncAwait extends BaseAsync
 {
+
+  const PROFILING = 'RunCallback';
+
   /**
    * Add a promise
    * 
@@ -37,6 +41,7 @@ class AsyncAwait extends BaseAsync
       throw new PromiseExistException('Promise ' . $key . '  exist, change the {$key}');
     }
     $this->promises[$key] = Worker\enqueueCallable(new SerializableClosure($closure), ...$args);
+    Yii::debug("Add a new callback {$key}", self::class);
     return $this;
   }
 
@@ -47,7 +52,9 @@ class AsyncAwait extends BaseAsync
    */
   public function run(): array
   {
+    Yii::beginProfile(self::PROFILING, self::class);
     $res = Promise\wait(Promise\all($this->promises));
+    Yii::endProfile(self::PROFILING, self::class);
     $this->flush();
     return $res;
   }
