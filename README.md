@@ -2,6 +2,11 @@ Async await
 ===========
 Async await for php yii2 integration, this uses amphp and support callbacks and Task 
 
+[![Latest Stable Version](https://poser.pugx.org/taguz91/yii2-async-await/v)](//packagist.org/packages/taguz91/yii2-async-await) 
+[![Total Downloads](https://poser.pugx.org/taguz91/yii2-async-await/downloads)](//packagist.org/packages/taguz91/yii2-async-await) 
+[![Latest Unstable Version](https://poser.pugx.org/taguz91/yii2-async-await/v/unstable)](//packagist.org/packages/taguz91/yii2-async-await) 
+[![License](https://poser.pugx.org/taguz91/yii2-async-await/license)](//packagist.org/packages/taguz91/yii2-async-await)
+
 Installation
 ------------
 
