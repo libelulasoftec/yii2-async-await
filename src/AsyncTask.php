@@ -57,14 +57,15 @@ class AsyncTask extends BaseAsync
         $results = [];
         $tasks = $this->promises;
 
-        if (empty($tasks)) return [];
+        if (empty($tasks)) {
+            return [];
+        }
 
         Yii::beginProfile(self::PROFILING, self::class);
 
-        $maxPoolSize = $this->maxPoolSize;
+        $pool = new DefaultPool($this->maxPoolSize);
 
-        Loop::run(function () use (&$results, $tasks, $maxPoolSize) {
-            $pool = new DefaultPool($maxPoolSize);
+        Loop::run(function () use (&$results, $tasks, &$pool) {
 
             $coroutines = [];
             foreach ($tasks as $key => $task) {
@@ -76,9 +77,12 @@ class AsyncTask extends BaseAsync
 
             $results = yield \Amp\Promise\all($coroutines);
 
-            return yield $pool->shutdown();
+            if (!$pool->isRunning()) {
+                return yield $pool->shutdown();
+            }
         });
 
+        $pool->kill();
         Yii::endProfile(self::PROFILING, self::class);
 
         $this->flush();
