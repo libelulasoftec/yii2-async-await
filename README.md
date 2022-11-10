@@ -21,6 +21,26 @@ or add
 
 to the require section of your `composer.json` file.
 
+Migration
+------------
+
+Si quieres migrar de la version original `taguz91/yii2-async-await` a la nueva version `libelulasoft/yii2-async-await` debes seguir los siguientes pasos: 
+
+1. Eliminar la version original 
+
+```
+composer remove taguz91/yii2-async-await
+```
+
+2. Instalar la nueva version 
+
+```
+composer require libelulasoft/yii2-async-await
+```
+
+3. Actualizar los namespace donde se este utilizando la libreria, en todo el proyecto debemos reemplazar `taguz91\AsyncAwait\` a `Libelulasoft\AsyncAwait\`  
+
+4. Probar que todo funcione de forma correcta.
 
 Usage
 -----
