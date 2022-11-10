@@ -1,6 +1,6 @@
 <?php
 
-namespace taguz91\AsyncAwait;
+namespace Libelulasoft\AsyncAwait;
 
 use yii\base\Component;
 use Amp\Parallel\Worker;

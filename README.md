@@ -2,11 +2,6 @@ Async await
 ===========
 Async await for php yii2 integration, this uses amphp and support callbacks and Task 
 
-[![Latest Stable Version](https://poser.pugx.org/taguz91/yii2-async-await/v)](//packagist.org/packages/taguz91/yii2-async-await) 
-[![Total Downloads](https://poser.pugx.org/taguz91/yii2-async-await/downloads)](//packagist.org/packages/taguz91/yii2-async-await) 
-[![Latest Unstable Version](https://poser.pugx.org/taguz91/yii2-async-await/v/unstable)](//packagist.org/packages/taguz91/yii2-async-await) 
-[![License](https://poser.pugx.org/taguz91/yii2-async-await/license)](//packagist.org/packages/taguz91/yii2-async-await)
-
 Installation
 ------------
 
@@ -15,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-composer require --prefer-dist taguz91/yii2-async-await
+composer require --prefer-dist libelulasoft/yii2-async-await
 ```
 
 or add
 
 ```
-"taguz91/yii2-async-await": "~1.0.0"
+"libelulasoft/yii2-async-await": "~1.0.0"
 ```
 
 to the require section of your `composer.json` file.
@@ -93,13 +88,13 @@ Adding to web app, in components section you need to add this configuration:
     'components' => [
         // If you want to use callbacks 
         'asyncAwait' => [
-            'class' => \taguz91\AsyncAwait\AsyncAwait::class,
+            'class' => \Libelulasoft\AsyncAwait\AsyncAwait::class,
             // Your own entry script, see the above examples
             'loader' => __DIR__ . '/async.php'
         ],
         // If you want to use classes, this is more faster 
         'asyncTask' => [
-            'class' => \taguz91\AsyncAwait\AsyncTask::class,
+            'class' => \Libelulasoft\AsyncAwait\AsyncTask::class,
             // Your own entry script, see the above examples
             'loader' => __DIR__ . '/async.php'
         ],
@@ -164,7 +159,7 @@ class PrintTask implements Task
 }
 
 
-/** @var \taguz91\AsyncAwait\AsyncTask */
+/** @var \Libelulasoft\AsyncAwait\AsyncTask */
 $async = Yii::$app->asyncTask;
 
 $async->add('1', new PrintTask('THIS IS MY LARGE TEXT'));

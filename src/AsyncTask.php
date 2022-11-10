@@ -1,6 +1,6 @@
 <?php
 
-namespace taguz91\AsyncAwait;
+namespace Libelulasoft\AsyncAwait;
 
 use Amp\Loop;
 use Amp\Parallel\Worker\DefaultPool;
